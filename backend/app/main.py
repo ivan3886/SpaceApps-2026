@@ -1,5 +1,6 @@
 from fastapi import Depends, FastAPI, HTTPException, Query, status
 from sqlalchemy.orm import Session
+from fastapi.middleware.cors import CORSMiddleware
 
 from app import crud
 from app.db import get_db
@@ -26,6 +27,17 @@ app = FastAPI(
     title="Orbit Health API",
     version="0.1.0",
     description="API de prototipo para registros de salud y muestras.",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5500",
+        "http://127.0.0.1:5500",
+    ],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
