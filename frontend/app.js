@@ -126,6 +126,12 @@ function setupRecommendationView() {
   if (navButton) navButton.innerHTML = "⚑ &nbsp; Indicaciones";
   section.querySelector("#alerts-list")?.remove();
   section.querySelector("#recommendation-form")?.closest("article")?.remove();
+  // Contenedor propio para las indicaciones por cortisol (loadRecommendations no lo vacía).
+  const cortisolIndications = document.createElement("div");
+  cortisolIndications.id = "cortisol-indications";
+  cortisolIndications.className = "grid";
+  cortisolIndications.setAttribute("aria-live", "polite");
+  heading?.after(cortisolIndications);
   const card = document.createElement("article");
   card.className = "card";
   const list = document.createElement("div");
@@ -134,7 +140,7 @@ function setupRecommendationView() {
   list.setAttribute("aria-live", "polite");
   list.textContent = "Cargando indicaciones…";
   card.append(list);
-  heading?.after(card);
+  cortisolIndications.after(card);
 }
 
 function setApiStatus(text, isError = false) {
@@ -729,7 +735,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Variable global para almacenar el último cortisol analizado en la sesión
-ultimoCortisolRegistrado = 0.50; // Valor por defecto seguro
+ultimoCortisolRegistrado = null; // Sin muestra analizada todavía
 
 // Función para generar y mostrar las indicaciones médicas dinámicamente
 function actualizarIndicacionesMedicas(nivelCortisol) {
@@ -804,7 +810,7 @@ function actualizarIndicacionesMedicas(nivelCortisol) {
 // Opcional: actualizar si cambian las casillas y ya hay un valor registrado
 document.querySelectorAll('#chkGolpeLesion, #chkEstres, #chkFaltaSueno').forEach(chk => {
   chk.addEventListener('change', () => {
-      actualizarIndicacionesMedicas(window.ultimoCortisolRegistrado || 0.50);
+      if (ultimoCortisolRegistrado !== null) actualizarIndicacionesMedicas(ultimoCortisolRegistrado);
   });
 });
 
@@ -849,7 +855,7 @@ document.getElementById('sample-form')?.addEventListener('submit', (e) => {
 
 // Función robusta que asegura que SIEMPRE se muestre una tarjeta (incluso si es normal)
 function actualizarIndicacionesMedicas(nivelCortisol) {
-  const alertsList = document.getElementById('alerts-list');
+  const alertsList = document.getElementById('cortisol-indications');
   if (!alertsList) return;
 
   const golpeLesion = document.getElementById('chkGolpeLesion')?.checked || false;
