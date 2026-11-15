@@ -72,7 +72,7 @@
         <section class="screen active" id="overview">
           <div class="page-heading"><div><div class="eyebrow">Panel de misión</div><h1>Resumen de salud</h1><p class="muted">Estado del último registro y observaciones relevantes.</p></div></div>
           <article class="card" style="margin-bottom:16px"><h2>Registrar muestra</h2><p class="muted">Registra la recolección para iniciar su seguimiento. El análisis aparecerá cuando el sensor o laboratorio lo envíe.</p>
-            <form id="sample-form"><div class="grid grid-2"><div class="field"><label for="sample-code">Código de muestra</label><input id="sample-code" placeholder="Ej. CREW01-2026-001" required maxlength="100" /></div><div class="field"><label for="analyte">Analito</label><input id="analyte" value="cortisol" required maxlength="100" /></div></div><div class="form-actions"><button class="button primary" type="submit">Registrar muestra</button></div></form><p id="sample-message" class="message" aria-live="polite"></p>
+            <form id="sample-form"><div class="grid grid-2"><div class="field"><label for="sample-code">Código de muestra</label><input id="sample-code" placeholder="Ej. CREW01-2026-001" required maxlength="100" /></div><div class="field"><label for="analyte">Analito</label><input id="analyte" value="cortisol" required maxlength="100" /></div></div><div class="form-actions"><button class="button primary" id="btnRegistrarMuestra" type="submit">Registrar muestra</button></div></form><p id="sample-message" class="message" aria-live="polite"></p>
           </article>
           <article class="card" id="latest-review"><h2>Última revisión</h2><p class="muted">Cargando el registro más reciente…</p><div class="detail-grid"></div></article>
           <div class="alert-banner"><div><strong>Nota de uso</strong><p>El estado refleja registros y controles de calidad disponibles; no es un diagnóstico ni una evaluación de aptitud.</p></div><button class="button" data-go="body">Añadir malestar o contexto</button></div>
@@ -103,7 +103,15 @@
             </article>
           </div>
           <article class="card" style="margin-top:16px"><h2>Contexto que pudo influir en la muestra</h2><p class="muted">Registra circunstancias relevantes cercanas a la toma.</p>
-            <div class="check-list" id="context-categories"><label><input type="checkbox" data-category="stress" />Estrés o evento emocional</label><label><input type="checkbox" data-category="physical_activity" />Actividad física o cambio de rutina</label><label><input type="checkbox" data-category="sleep" />Falta de sueño o alteración del descanso</label><label><input type="checkbox" data-category="illness" />Malestar o enfermedad</label><label><input type="checkbox" data-category="injury" />Golpe o lesión</label><label><input type="checkbox" data-category="collection_issue" />Dificultad durante la toma o problema de muestra</label><label><input type="checkbox" data-category="other" />Otro evento</label></div>
+            <div class="check-list" id="context-categories">
+              <label><input type="checkbox" id="chkEstres" data-category="stress" />Estrés o evento emocional</label>
+              <label><input type="checkbox" data-category="physical_activity" />Actividad física o cambio de rutina</label>
+              <label><input type="checkbox" id="chkFaltaSueno" data-category="sleep" />Falta de sueño o alteración del descanso</label>
+              <label><input type="checkbox" data-category="illness" />Malestar o enfermedad</label>
+              <label><input type="checkbox" id="chkGolpeLesion" data-category="injury" />Golpe o lesión</label>
+              <label><input type="checkbox" data-category="collection_issue" />Dificultad durante la toma o problema de muestra</label>
+              <label><input type="checkbox" data-category="other" />Otro evento</label>
+            </div>
             <div class="field"><label for="context-note">Detalles (opcional)</label><textarea id="context-note" placeholder="Añade detalles o una hora aproximada…" maxlength="4000"></textarea></div><button class="button primary" id="save-context" type="button" style="margin-top:14px">Guardar contexto</button><p id="context-confirmation" class="message" aria-live="polite"></p>
           </article>
           <div class="notice">Los datos subjetivos y de contexto complementan la lectura de la muestra; no equivalen a una interpretación diagnóstica.</div>

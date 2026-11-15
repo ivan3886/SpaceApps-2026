@@ -603,4 +603,295 @@ async function initialize() {
   }
 }
 
+// Función que simula la lectura del sensor y genera las indicaciones médicas
+function registrarMuestraYGenerarIndicaciones() {
+  // 1. Generar valor aleatorio entre 0.10 y 5.00 (simulando el sensor)
+  const nivelCortisol = parseFloat((Math.random() * (5.00 - 0.10) + 0.10).toFixed(2));
+  
+  // Mostrar el valor obtenido en la interfaz (si tienes un elemento para mostrarlo)
+  const displayCortisol = document.getElementById('valorCortisolDisplay');
+  if (displayCortisol) {
+      displayCortisol.textContent = `${nivelCortisol} µg/dL`;
+  }
+
+  // 2. Obtener las casillas tildadas de incidencias
+  const golpeLesion = document.getElementById('chkGolpeLesion')?.checked || false;
+  const estres = document.getElementById('chkEstres')?.checked || false;
+  const faltaSueno = document.getElementById('chkFaltaSueno')?.checked || false;
+
+  // Contenedor en la pantalla "Indicaciones"
+  const contenedor = document.getElementById('indicacionesContenedor');
+  if (!contenedor) return;
+
+  let htmlIndicaciones = `<h3>Protocolo Médico de Misión - Indicaciones</h3>`;
+  htmlIndicaciones += `<p class="text-muted">Nivel de Cortisol Registrado: <strong>${nivelCortisol} µg/dL</strong></p>`;
+
+  // --- EVALUACIÓN DE CORTISOL SEGÚN RANGOS ---
+  if (nivelCortisol >= 3.01 && nivelCortisol <= 5.00) {
+      // Rango Extremo (con melatonina)
+      htmlIndicaciones += `
+          <div class="alerta-critica p-3 mb-3 border border-danger rounded bg-light-danger">
+              <span class="badge bg-danger text-white">¡NIVEL EXTREMO (3.01 - 5.00)!</span>
+              <p class="mt-2">Se detectó una saturación crítica de estrés biológico. Protocolo de emergencia activado:</p>
+              <ul>
+                  <li>💡 <strong>Control lumínico:</strong> Controlar la iluminación LED para emular estrictamente el ritmo circadiano terrestre.</li>
+                  <li>🥽 <strong>Realidad Virtual:</strong> Utilizar cascos de realidad virtual mostrando paisajes relajantes de la Tierra para generar sensación de tranquilidad y confort.</li>
+                  <li>📡 <strong>Asistencia remota:</strong> Solicitar asistencia psicológica remota desde la Tierra de inmediato (si las comunicaciones lo permiten).</li>
+                  <li>💊 <strong>Inductor de sueño:</strong> <em>[Nivel extremo detectado]</em> Administrar inductor de sueño como la <strong>melatonina</strong> bajo pauta médica de emergencia.</li>
+              </ul>
+          </div>
+      `;
+  } else if (nivelCortisol >= 1.01 && nivelCortisol <= 3.00) {
+      // Rango Alto (sin melatonina)
+      htmlIndicaciones += `
+          <div class="alerta-advertencia p-3 mb-3 border border-warning rounded bg-light-warning">
+              <span class="badge bg-warning text-dark">NIVEL ALTO (1.01 - 3.00)</span>
+              <p class="mt-2">Se requiere contención preventiva:</p>
+              <ul>
+                  <li>💡 <strong>Control lumínico:</strong> Ajustar la iluminación LED de la cabina a tonalidades cálidas para favorecer la relajación.</li>
+                  <li>🥽 <strong>Realidad Virtual:</strong> Iniciar sesión de inmersión con cascos VR (paisajes terrestres) para reducir los niveles de ansiedad.</li>
+                  <li>📡 <strong>Monitoreo:</strong> Vigilar parámetros vitales y programar reporte con el soporte médico en Tierra.</li>
+              </ul>
+          </div>
+      `;
+  } else {
+      // Rango Estables (0.10 a 1.00)
+      htmlIndicaciones += `
+          <div class="alerta-normal p-3 mb-3 border border-success rounded bg-light-success">
+              <span class="badge bg-success text-white">NIVEL ESTABLE (0.10 - 1.00)</span>
+              <p class="mt-2">Parámetros dentro de la normalidad. Continuar con las operaciones regulares de la misión.</p>
+          </div>
+      `;
+  }
+
+  // --- INDICACIONES EXTRAS SEGÚN CASILLAS TILDADAS ---
+  let extrasHtml = "";
+
+  if (golpeLesion) {
+      extrasHtml += `<li>🩹 <strong>Golpe o Lesión:</strong> Aplicar protocolo de revisión de trauma, utilizar botiquín de primeros auxilios y registrar telemetría de la zona afectada.</li>`;
+  }
+  if (estres) {
+      extrasHtml += `<li>🧘 <strong>Estrés Operativo:</strong> Realizar pausa activa de 10 minutos, ejercicios de respiración guiada y revisión de cargas de trabajo.</li>`;
+  }
+  if (faltaSueno) {
+      extrasHtml += `<li>🛌 <strong>Falta de Sueño:</strong> Modificar ventana de descanso en el próximo turno para asegurar recuperación cognitiva óptima.</li>`;
+  }
+
+  if (extrasHtml !== "") {
+      htmlIndicaciones += `
+          <div class="indicaciones-extras mt-3 p-3 border rounded bg-light">
+              <h5>Medidas Adicionales por Incidencias Registradas:</h5>
+              <ul>${extrasHtml}</ul>
+          </div>
+      `;
+  }
+
+  // Inyectar en el DOM
+  contenedor.innerHTML = htmlIndicaciones;
+}
+
+// Vincular al botón de "Registrar muestra" y cambios en checkboxes
+document.addEventListener('DOMContentLoaded', () => {
+  const btnRegistrar = document.getElementById('btnRegistrarMuestra');
+  if (btnRegistrar) {
+      btnRegistrar.addEventListener('click', registrarMuestraYGenerarIndicaciones);
+  }
+
+  // Opcional: si tildan/destildan casillas, refresca las indicaciones con el último valor simulado
+  const checkboxes = document.querySelectorAll('#chkGolpeLesion, #chkEstres, #chkFaltaSueno');
+  checkboxes.forEach(chk => {
+      chk.addEventListener('change', () => {
+          // Si ya hay un contenedor activo, actualiza las extras sin cambiar el valor del sensor
+          if (document.getElementById('indicacionesContenedor').innerHTML.trim() !== "") {
+              // Opcional: puedes volver a llamar a la función o mantener el valor actual.
+          }
+      });
+  });
+});
+
+// Variable global para almacenar el último cortisol analizado en la sesión
+let ultimoCortisolRegistrado = 0.50; // Valor por defecto seguro
+
+// Función para generar y mostrar las indicaciones médicas dinámicamente
+function actualizarIndicacionesMedicas(nivelCortisol) {
+    ultimoCortisolRegistrado = nivelCortisol;
+    const alertsList = document.getElementById('alerts-list');
+    if (!alertsList) return;
+
+    // Leer estado de las casillas de contexto del mapa corporal / formulario
+    const golpeLesion = document.getElementById('chkGolpeLesion')?.checked || false;
+    const estres = document.getElementById('chkEstres')?.checked || false;
+    const faltaSueno = document.getElementById('chkFaltaSueno')?.checked || false;
+
+    let html = '';
+
+    // --- 1. EVALUACIÓN SEGÚN NIVEL DE CORTISOL ---
+    if (nivelCortisol >= 3.01 && nivelCortisol <= 5.00) {
+        // Rango Extremo (Incluye melatonina)
+        html += `
+            <article class="card" style="border-color: var(--red); background: #2b181a;">
+                <div class="tag red" style="margin-bottom: 8px;">NIVEL EXTREMO DE CORTISOL (${nivelCortisol.toFixed(2)} µg/dL)</div>
+                <h3>Protocolo de Emergencia Crítica</h3>
+                <p class="muted">Se detectaron niveles biológicos críticos que requieren acción inmediata:</p>
+                <ul style="margin-top: 10px; padding-left: 20px; line-height: 1.6;">
+                    <li>💡 <strong>Control lumínico:</strong> Controlar la iluminación LED para emular estrictamente el ritmo circadiano terrestre.</li>
+                    <li>🥽 <strong>Realidad Virtual:</strong> Utilizar cascos de realidad virtual mostrando paisajes de la Tierra para generar sensación de tranquilidad y confort.</li>
+                    <li>📡 <strong>Asistencia remota:</strong> Asistencia psicológica remota desde la Tierra en caso de que sea posible.</li>
+                    <li>💊 <strong>Medicación de rescate:</strong> <em>[Nivel extremo detectado]</em> Se sugiere administrar un inductor de sueño como la <strong>melatonina</strong>.</li>
+                </ul>
+            </article>
+        `;
+    } else if (nivelCortisol >= 1.01 && nivelCortisol <= 3.00) {
+        // Rango Alto (Sin melatonina)
+        html += `
+            <article class="card" style="border-color: var(--amber); background: #2b2418;">
+                <div class="tag amber" style="margin-bottom: 8px;">NIVEL ALTO DE CORTISOL (${nivelCortisol.toFixed(2)} µg/dL)</div>
+                <h3>Protocolo de Contención Preventiva</h3>
+                <p class="muted">Se requiere estabilización de parámetros de estrés:</p>
+                <ul style="margin-top: 10px; padding-left: 20px; line-height: 1.6;">
+                    <li>💡 <strong>Control lumínico:</strong> Controlar la iluminación LED para emular el ritmo circadiano.</li>
+                    <li>🥽 <strong>Realidad Virtual:</strong> Utilizar cascos de realidad virtual mostrando paisajes de la Tierra para generar sensación de tranquilidad y confort.</li>
+                    <li>📡 <strong>Asistencia remota:</strong> Asistencia psicológica remota desde la Tierra en caso de que sea posible.</li>
+                </ul>
+            </article>
+        `;
+    } else {
+        // Rango Estable (0.10 a 1.00)
+        html += `
+            <article class="card" style="border-color: var(--green); background: #193a2b;">
+                <div class="tag green" style="margin-bottom: 8px;">NIVEL ESTABLE (${nivelCortisol.toFixed(2)} µg/dL)</div>
+                <h3>Parámetros Óptimos</h3>
+                <p class="muted">El nivel de cortisol se encuentra dentro del rango estable (0.10 - 1.00). Continuar con las operaciones normales de la misión.</p>
+            </article>
+        `;
+    }
+
+    // --- 2. MEDIDAS EXTRAS SEGÚN CASILLAS TILDADAS ---
+    let extrasHtml = '';
+    if (golpeLesion) {
+        extrasHtml += `<li>🩹 <strong>Golpe o lesión:</strong> Evaluar zona afectada, aplicar primeros auxilios y registrar telemetría clínica.</li>`;
+    }
+    if (estres) {
+        extrasHtml += `<li>🧘 <strong>Estrés:</strong> Realizar pausa operativa y ejercicios de respiración guiada de 10 minutos.</li>`;
+    }
+    if (faltaSueno) {
+        extrasHtml += `<li>🛌 <strong>Falta de sueño:</strong> Reorganizar turnos para garantizar un descanso continuo mínimo de 6 horas.</li>`;
+    }
+
+    if (extrasHtml !== '') {
+        html += `
+            <article class="card" style="margin-top: 16px;">
+                <h3>Medidas por Incidencias Registradas</h3>
+                <ul style="margin-top: 10px; padding-left: 20px; line-height: 1.6;">${extrasHtml}</ul>
+            </article>
+        `;
+    }
+
+    alertsList.innerHTML = html;
+}
+
+document.getElementById('sample-form')?.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  // 1. Generar el valor aleatorio de cortisol (entre 0.10 y 5.00)
+  const nivelCortisol = parseFloat((Math.random() * (5.00 - 0.10) + 0.10).toFixed(2));
+  
+  // 2. Mostrar el resultado directamente en el campo de la interfaz (reemplazando el texto estático)
+  const sensorStatusEl = document.getElementById('sensor-analysis-status');
+  if (sensorStatusEl) {
+      let categoriaColor = 'green';
+      let textoCategoria = 'ESTABLE (0.10 - 1.00)';
+      
+      if (nivelCortisol > 3.00) {
+          categoriaColor = 'red';
+          textoCategoria = 'EXTREMO (3.01 - 5.00)';
+      } else if (nivelCortisol > 1.00) {
+          categoriaColor = 'amber';
+          textoCategoria = 'ALTO (1.01 - 3.00)';
+      }
+
+      sensorStatusEl.innerHTML = `
+          <strong>Muestra analizada con éxito.</strong><br>
+          Nivel de Cortisol Detectado: <span class="tag ${categoriaColor}">${nivelCortisol} µg/dL — ${textoCategoria}</span>
+      `;
+  }
+
+  // 3. Generar las indicaciones correspondientes en la pestaña de Alertas/Indicaciones
+  actualizarIndicacionesMedicas(nivelCortisol);
+  
+  // Mensaje de éxito en el formulario
+  const msg = document.getElementById('sample-message');
+  if (msg) msg.textContent = "¡Muestra registrada y analizada correctamente!";
+});
+
+// Función robusta que asegura que SIEMPRE se muestre una tarjeta (incluso si es normal)
+function actualizarIndicacionesMedicas(nivelCortisol) {
+  const alertsList = document.getElementById('alerts-list');
+  if (!alertsList) return;
+
+  const golpeLesion = document.getElementById('chkGolpeLesion')?.checked || false;
+  const estres = document.getElementById('chkEstres')?.checked || false;
+  const faltaSueno = document.getElementById('chkFaltaSueno')?.checked || false;
+
+  let html = '';
+
+  // --- EVALUACIÓN DE CORTISOL (¡Ahora incluye la tarjeta para nivel normal!) ---
+  if (nivelCortisol >= 3.01 && nivelCortisol <= 5.00) {
+      html += `
+          <article class="card" style="border-color: var(--red); background: #2b181a;">
+              <div class="tag red" style="margin-bottom: 8px;">NIVEL EXTREMO (${nivelCortisol} µg/dL)</div>
+              <h3>Protocolo de Emergencia Crítica</h3>
+              <p class="muted">Se requiere intervención inmediata:</p>
+              <ul style="margin-top: 10px; padding-left: 20px; line-height: 1.6;">
+                  <li>💡 <strong>Control lumínico:</strong> Controlar la iluminación LED para emular estrictamente el ritmo circadiano terrestre.</li>
+                  <li>🥽 <strong>Realidad Virtual:</strong> Utilizar cascos de realidad virtual mostrando paisajes de la Tierra para generar tranquilidad y confort.</li>
+                  <li>📡 <strong>Asistencia remota:</strong> Asistencia psicológica remota desde la Tierra en caso de que sea posible.</li>
+                  <li>💊 <strong>Inductor de sueño:</strong> <em>[Nivel extremo detectado]</em> Se sugiere administrar un inductor de sueño como la <strong>melatonina</strong>.</li>
+              </ul>
+          </article>
+      `;
+  } else if (nivelCortisol >= 1.01 && nivelCortisol <= 3.00) {
+      html += `
+          <article class="card" style="border-color: var(--amber); background: #2b2418;">
+              <div class="tag amber" style="margin-bottom: 8px;">NIVEL ALTO (${nivelCortisol} µg/dL)</div>
+              <h3>Protocolo de Contención Preventiva</h3>
+              <p class="muted">Se requiere estabilización:</p>
+              <ul style="margin-top: 10px; padding-left: 20px; line-height: 1.6;">
+                  <li>💡 <strong>Control lumínico:</strong> Controlar la iluminación LED para emular el ritmo circadiano terrestre.</li>
+                  <li>🥽 <strong>Realidad Virtual:</strong> Utilizar cascos de realidad virtual mostrando paisajes de la Tierra para generar tranquilidad y confort.</li>
+                  <li>📡 <strong>Asistencia remota:</strong> Asistencia psicológica remota desde la Tierra en caso de que sea posible.</li>
+              </ul>
+          </article>
+      `;
+  } else {
+      html += `
+          <article class="card" style="border-color: var(--green); background: #193a2b;">
+              <div class="tag" style="margin-bottom: 8px;">NIVEL ESTABLE (${nivelCortisol} µg/dL)</div>
+              <h3>Parámetros Óptimos</h3>
+              <p class="muted">El nivel de cortisol se encuentra dentro del rango estable (0.10 - 1.00).</p>
+              <ul style="margin-top: 10px; padding-left: 20px; line-height: 1.6;">
+                  <li>✅ Continuar con las operaciones normales de la misión. Mantener pautas habituales de descanso.</li>
+              </ul>
+          </article>
+      `;
+  }
+
+  // --- CASILLAS ADICIONALES ---
+  let extrasHtml = '';
+  if (golpeLesion) extrasHtml += `<li>🩹 <strong>Golpe o lesión:</strong> Evaluar zona afectada y aplicar protocolo de primeros auxilios.</li>`;
+  if (estres) extrasHtml += `<li>🧘 <strong>Estrés:</strong> Realizar pausa operativa y ejercicios de respiración guiada de 10 minutos.</li>`;
+  if (faltaSueno) extrasHtml += `<li>🛌 <strong>Falta de sueño:</strong> Reorganizar turnos para garantizar un descanso continuo mínimo de 6 horas.</li>`;
+
+  if (extrasHtml !== '') {
+      html += `
+          <article class="card" style="margin-top: 16px;">
+              <h3>Medidas por Incidencias Registradas</h3>
+              <ul style="margin-top: 10px; padding-left: 20px; line-height: 1.6;">${extrasHtml}</ul>
+          </article>
+      `;
+  }
+
+  alertsList.innerHTML = html;
+}
+
 document.addEventListener("DOMContentLoaded", initialize);
