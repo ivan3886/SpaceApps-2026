@@ -1,14 +1,12 @@
-# Current UI workflow and hardware integration limits
+# Flujo de pantallas del prototipo
 
-This version implements the operator-facing flow around the existing API:
+- **Resumen:** registra una muestra y presenta una revisión del registro más reciente, con estados y aclaraciones disponibles.
+- **Registro de muestra:** al guardar, selecciona la muestra y abre el Mapa corporal para añadir malestares y contexto asociados.
+- **Mapa corporal:** almacena síntomas y contexto mediante los endpoints existentes. Los colores representan gravedad de síntomas auto-reportados, no cortisol ni diagnóstico.
+- **Muestras:** historial de solo lectura y ficha detallada de la muestra seleccionada, incluyendo resultados, método, calidad, contexto y síntomas vinculados.
 
-1. Register a sample from the mission summary.
-2. The app selects it and opens the body map so the astronaut/operator can enter symptoms and context for that sample.
-3. The overview shows the newest sample record, its analysis and quality status, results when available, and caveats such as missing result, missing minutes-from-wake, or context notes.
-4. The Samples screen is a read-only history/detail view. Results are displayed from the existing sample fields or `/samples/{id}/assay-results`; there is no manual result editor.
+## Integración con sensor
 
-## Important integration boundary
+La aplicación actual no tiene una conexión de hardware ni un protocolo de transporte del sensor. Por ahora muestra el estado «esperando resultado» y solo presenta resultados existentes guardados por la API. No calcula cortisol a partir de señales crudas ni fabrica valores. Cuando se defina la integración real, el adaptador deberá guardar valor original, unidad, método/calibración y procedencia por medio de los endpoints de assay results.
 
-The repository currently has no sensor transport, device protocol, or hardware connection. The UI therefore reports “waiting for sensor or laboratory result” for a registered sample with no result. It never calculates cortisol from raw optical signals or invents a measurement. A future adapter must document the sensor protocol, calibration data and assay method, then write validated results through the existing assay-results API. Sensor calibration examples in `calibrador/app_marte_biosensor.py` are demonstrative/synthetic, not validated clinical calibration.
-
-Health status wording is intentionally limited to record and quality status; it is not a diagnosis or fitness-for-duty determination. Body-map colors represent self-reported symptom severity, not cortisol concentration or a medical finding.
+El resumen de estado refleja el estado del registro y del control de calidad disponibles. No es diagnóstico clínico ni evaluación de aptitud.
