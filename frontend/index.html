@@ -8,28 +8,13 @@
   <style>
     :root {
       color-scheme: dark;
-      --bg: #0b1118;
-      --panel: #121b25;
-      --panel-2: #182431;
-      --border: #263545;
-      --text: #edf4f8;
-      --muted: #9aabba;
-      --cyan: #62d9d0;
-      --blue: #70a9ff;
-      --amber: #f3c568;
-      --red: #ff7777;
-      --green: #84d6a5;
+      --bg: #0b1118; --panel: #121b25; --panel-2: #182431; --border: #263545;
+      --text: #edf4f8; --muted: #9aabba; --cyan: #62d9d0; --blue: #70a9ff;
+      --amber: #f3c568; --red: #ff7777; --green: #84d6a5;
     }
-
     * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font: 15px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     button, input, select, textarea { font: inherit; }
-    button { color: inherit; }
     .app { min-height: 100vh; display: grid; grid-template-columns: 230px minmax(0, 1fr); }
     aside { background: #0e151d; border-right: 1px solid var(--border); padding: 26px 16px; }
     .brand { display: flex; gap: 11px; align-items: center; padding: 0 8px 28px; font-weight: 700; letter-spacing: .04em; }
@@ -42,7 +27,7 @@
     .mission-card { margin: 34px 5px 0; padding: 14px; border: 1px solid var(--border); border-radius: 12px; color: var(--muted); font-size: 12px; }
     .mission-card strong { display: block; color: var(--text); margin: 5px 0; font-size: 13px; }
     main { min-width: 0; }
-    header { min-height: 72px; padding: 15px 32px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: rgba(15, 23, 32, .8); }
+    header { min-height: 72px; padding: 15px 32px; display: flex; justify-content: space-between; align-items: center; gap: 16px; border-bottom: 1px solid var(--border); background: rgba(15, 23, 32, .8); }
     .crew { color: var(--muted); font-size: 13px; }
     .crew strong { color: var(--text); }
     .connection { color: var(--green); font-size: 12px; display: flex; align-items: center; gap: 8px; }
@@ -77,14 +62,12 @@
     .body-layout { display: grid; grid-template-columns: minmax(250px, .85fr) minmax(300px, 1.15fr); gap: 20px; }
     .body-map { min-height: 390px; display: grid; place-items: center; background: radial-gradient(ellipse at center, #172b35, transparent 70%); }
     .body-map svg { width: 195px; height: 350px; overflow: visible; }
-    .body-part { fill: #31495a; stroke: #8da6b6; stroke-width: 2; cursor: pointer; transition: fill .15s, opacity .15s; }
+    .body-part { fill: #31495a; stroke: #8da6b6; stroke-width: 2; cursor: pointer; }
     .body-part:hover, .body-part.selected { stroke: white; stroke-width: 3; }
-    .body-part.reported-1 { fill: #70a9ff; }
-    .body-part.reported-2 { fill: #62d9d0; }
-    .body-part.reported-3 { fill: #f3c568; }
-    .body-part.reported-4 { fill: #ff9a57; }
+    .body-part.reported-1 { fill: #70a9ff; } .body-part.reported-2 { fill: #62d9d0; }
+    .body-part.reported-3 { fill: #f3c568; } .body-part.reported-4 { fill: #ff9a57; }
     .body-part.reported-5 { fill: #ff7777; }
-    .zone-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
+    .zone-buttons, .form-actions, .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
     .zone-button { border: 1px solid var(--border); background: var(--panel-2); color: var(--muted); border-radius: 8px; padding: 7px 10px; cursor: pointer; }
     .zone-button.selected { color: var(--text); border-color: var(--cyan); }
     .field { margin-top: 16px; }
@@ -96,32 +79,18 @@
     .check-list label { color: var(--muted); font-weight: 400; font-size: 13px; display: flex; align-items: center; gap: 8px; }
     input[type="checkbox"] { width: auto; accent-color: var(--cyan); }
     .notice { border: 1px solid var(--border); border-left: 3px solid var(--blue); border-radius: 9px; padding: 12px 14px; color: var(--muted); font-size: 12px; margin-top: 16px; }
-    .recommendation { padding: 16px; border: 1px solid #69532c; background: #2b2418; border-radius: 11px; margin-top: 15px; }
-    .recommendation h3 { color: var(--amber); }
-    .recommendation p { color: #d3c7ae; font-size: 13px; }
-    .footer-note { color: var(--muted); font-size: 11px; text-align: center; margin-top: 24px; }
-    .form-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
     .message { min-height: 1.5em; margin-top: 10px; color: var(--muted); }
-    .legend { display: flex; flex-wrap: wrap; gap: 10px 16px; margin-top: 12px; color: var(--muted); font-size: 12px; }
+    .legend { color: var(--muted); font-size: 12px; gap: 10px 16px; }
     .legend span { display: inline-flex; align-items: center; gap: 6px; }
     .swatch { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+    .footer-note { color: var(--muted); font-size: 11px; text-align: center; margin-top: 24px; }
     @media (max-width: 820px) {
-      .app { grid-template-columns: 1fr; }
-      aside { padding: 12px; border-right: 0; border-bottom: 1px solid var(--border); }
-      .brand { padding: 0 5px 12px; }
-      nav { display: flex; overflow-x: auto; }
-      nav button { white-space: nowrap; }
-      .mission-card { display: none; }
-      header { padding: 12px 18px; }
-      .content { padding: 23px 18px 36px; }
-      .grid-3 { grid-template-columns: 1fr; }
-      .body-layout, .grid-2 { grid-template-columns: 1fr; }
+      .app { grid-template-columns: 1fr; } aside { padding: 12px; border-right: 0; border-bottom: 1px solid var(--border); }
+      .brand { padding: 0 5px 12px; } nav { display: flex; overflow-x: auto; } nav button { white-space: nowrap; }
+      .mission-card { display: none; } header { padding: 12px 18px; } .content { padding: 23px 18px 36px; }
+      .grid-3, .grid-2, .body-layout { grid-template-columns: 1fr; }
     }
-    @media (max-width: 480px) {
-      .page-heading { flex-direction: column; }
-      .alert-banner { align-items: flex-start; flex-direction: column; }
-      .crew { font-size: 11px; }
-    }
+    @media (max-width: 480px) { .page-heading, header { flex-direction: column; align-items: flex-start; } .alert-banner { align-items: flex-start; flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -135,243 +104,80 @@
         <button data-screen="sample">◉ &nbsp; Muestras</button>
         <button data-screen="alerts">⚑ &nbsp; Alertas</button>
       </nav>
-      <div class="mission-card">
-        <div class="eyebrow">Misión</div>
-        <strong>Expedición Ares · Demo</strong>
-        Registros guardados en la base de datos de la API.
-      </div>
+      <div class="mission-card"><div class="eyebrow">Misión</div><strong>Expedición Ares · Demo</strong>Registros de prueba guardados en la API.</div>
     </aside>
-
     <main>
       <header>
-        <div class="crew">Tripulación &nbsp; <strong>Demo de misión</strong></div>
+        <label class="crew" for="subject-code">Tripulante &nbsp; <input id="subject-code" value="CREW-01" maxlength="100" aria-label="Código de tripulante" /></label>
         <div class="connection"><span class="dot"></span> Panel de salud a bordo</div>
       </header>
-
       <div class="content">
         <section class="screen active" id="overview">
           <div class="page-heading">
-            <div>
-              <div class="eyebrow">Panel de misión</div>
-              <h1>Resumen de salud</h1>
-              <p class="muted">Registra síntomas, muestras y contexto de la tripulación.</p>
-            </div>
+            <div><div class="eyebrow">Panel de misión</div><h1>Resumen de salud</h1><p class="muted">Registra síntomas, muestras y contexto de la tripulación.</p></div>
             <button class="button primary" data-go="sample">＋ Registrar muestra</button>
           </div>
-
           <div class="grid grid-3">
-            <article class="card status-card">
-              <div class="status-icon">✓</div>
-              <div><div class="eyebrow">Sistema</div><strong>Conectado a la API</strong></div>
-            </article>
-            <article class="card">
-              <div class="eyebrow">Entrada rápida</div>
-              <p style="margin-top:8px">Registra un síntoma en el mapa corporal, con opción de dictado por voz.</p>
-            </article>
-            <article class="card">
-              <div class="eyebrow">Datos de prueba</div>
-              <p style="margin-top:8px">Usa códigos ficticios durante esta demostración.</p>
-            </article>
+            <article class="card status-card"><div class="status-icon">✓</div><div><div class="eyebrow">Sistema</div><strong id="api-status">Conectando con la API…</strong></div></article>
+            <article class="card"><div class="eyebrow">Entrada rápida</div><p style="margin-top:8px">Registra síntomas en el mapa corporal, con opción de dictado por voz si el navegador lo soporta.</p><button class="button" data-go="body" style="margin-top:12px">Registrar síntoma</button></article>
+            <article class="card"><div class="eyebrow">Datos de prueba</div><p style="margin-top:8px">Usa códigos ficticios durante esta demostración.</p></article>
           </div>
-
-          <div class="alert-banner">
-            <div>
-              <strong>Acciones del prototipo</strong>
-              <p>Los registros se guardan en la API. Las recomendaciones se cargan manualmente y no son generadas por reglas clínicas.</p>
-            </div>
-            <button class="button warning" data-go="alerts">Ver alertas →</button>
-          </div>
-
+          <div class="alert-banner"><div><strong>Prototipo conectado</strong><p>Los registros se guardan mediante la API. Las indicaciones se cargan manualmente y no se generan con reglas clínicas.</p></div><button class="button warning" data-go="alerts">Ver alertas →</button></div>
           <div class="grid grid-2">
-            <article class="card">
-              <h2>Flujo de demostración</h2>
-              <ol class="muted" style="padding-left:20px; margin:0">
-                <li>Registra una muestra de saliva.</li>
-                <li>Registra un síntoma en el mapa corporal.</li>
-                <li>Asocia contexto a la muestra seleccionada.</li>
-                <li>Consulta alertas o carga una indicación aprobada.</li>
-              </ol>
-            </article>
-            <article class="card">
-              <h2>Interpretación responsable</h2>
-              <p class="muted">El cortisol se presenta como indicador sistémico, no localizado en una zona. Los colores del mapa reflejan la gravedad reportada de síntomas y no constituyen un diagnóstico.</p>
-              <div class="notice">Usar solo datos ficticios en esta versión de demostración.</div>
-            </article>
+            <article class="card"><h2>Flujo de demostración</h2><ol class="muted" style="padding-left:20px;margin:0"><li>Registra una muestra de saliva.</li><li>Registra un síntoma en el mapa corporal.</li><li>Asocia contexto a la muestra seleccionada.</li><li>Consulta alertas o carga una indicación aprobada.</li></ol></article>
+            <article class="card"><h2>Interpretación responsable</h2><p class="muted">El cortisol es un indicador sistémico, no localizado en una zona. Los colores del mapa reflejan la gravedad reportada y no constituyen un diagnóstico.</p><div class="notice">Usar solo datos ficticios en esta versión de demostración.</div></article>
           </div>
         </section>
 
         <section class="screen" id="body">
-          <div class="page-heading">
-            <div>
-              <div class="eyebrow">Exploración y registro</div>
-              <h1>Mapa corporal</h1>
-              <p class="muted">Selecciona una zona y registra cómo te sientes.</p>
-            </div>
-            <span class="tag blue">Cortisol: indicador general</span>
-          </div>
-
+          <div class="page-heading"><div><div class="eyebrow">Exploración y registro</div><h1>Mapa corporal</h1><p class="muted">Selecciona una zona y registra cómo te sientes.</p></div><span class="tag blue">Cortisol: indicador general</span></div>
           <div class="body-layout">
             <article class="card">
               <h2>Selecciona una zona</h2>
-              <div class="body-map">
-                <svg viewBox="0 0 220 420" role="img" aria-label="Figura humana interactiva">
-                  <circle class="body-part" data-zone="Cabeza" cx="110" cy="42" r="28" tabindex="0" role="button" aria-label="Cabeza" />
-                  <path class="body-part" data-zone="Pecho" d="M75 82 Q110 68 145 82 L153 166 Q110 183 67 166 Z" tabindex="0" role="button" aria-label="Pecho" />
-                  <path class="body-part" data-zone="Abdomen" d="M68 169 Q110 181 152 169 L143 237 Q110 250 77 237 Z" tabindex="0" role="button" aria-label="Abdomen" />
-                  <path class="body-part" data-zone="Brazos" d="M72 86 L48 94 L23 194 Q27 207 38 199 L75 132 Z" tabindex="0" role="button" aria-label="Brazos" />
-                  <path class="body-part" data-zone="Brazos" d="M148 86 L172 94 L197 194 Q193 207 182 199 L145 132 Z" tabindex="0" role="button" aria-label="Brazos" />
-                  <path class="body-part" data-zone="Piernas" d="M78 241 L106 246 L102 370 L82 390 L69 379 Z" tabindex="0" role="button" aria-label="Piernas" />
-                  <path class="body-part" data-zone="Piernas" d="M114 246 L142 241 L151 379 L138 390 L118 370 Z" tabindex="0" role="button" aria-label="Piernas" />
-                </svg>
-              </div>
-              <div class="zone-buttons" aria-label="Zonas del cuerpo">
-                <button class="zone-button" data-zone="Cabeza">Cabeza</button>
-                <button class="zone-button" data-zone="Pecho">Pecho</button>
-                <button class="zone-button" data-zone="Abdomen">Abdomen</button>
-                <button class="zone-button" data-zone="Brazos">Brazos</button>
-                <button class="zone-button" data-zone="Piernas">Piernas</button>
-              </div>
-              <div class="legend" aria-label="Leyenda de gravedad de síntomas">
-                <span><i class="swatch" style="background:#70a9ff"></i>1 leve</span>
-                <span><i class="swatch" style="background:#62d9d0"></i>2</span>
-                <span><i class="swatch" style="background:#f3c568"></i>3 moderada</span>
-                <span><i class="swatch" style="background:#ff9a57"></i>4</span>
-                <span><i class="swatch" style="background:#ff7777"></i>5 intensa</span>
-              </div>
+              <div class="body-map"><svg viewBox="0 0 220 420" role="img" aria-label="Figura humana interactiva">
+                <circle class="body-part" data-zone="Cabeza" cx="110" cy="42" r="28" tabindex="0" role="button" aria-label="Cabeza" />
+                <path class="body-part" data-zone="Pecho" d="M75 82 Q110 68 145 82 L153 166 Q110 183 67 166 Z" tabindex="0" role="button" aria-label="Pecho" />
+                <path class="body-part" data-zone="Abdomen" d="M68 169 Q110 181 152 169 L143 237 Q110 250 77 237 Z" tabindex="0" role="button" aria-label="Abdomen" />
+                <path class="body-part" data-zone="Brazos" d="M72 86 L48 94 L23 194 Q27 207 38 199 L75 132 Z" tabindex="0" role="button" aria-label="Brazos" />
+                <path class="body-part" data-zone="Brazos" d="M148 86 L172 94 L197 194 Q193 207 182 199 L145 132 Z" tabindex="0" role="button" aria-label="Brazos" />
+                <path class="body-part" data-zone="Piernas" d="M78 241 L106 246 L102 370 L82 390 L69 379 Z" tabindex="0" role="button" aria-label="Piernas" />
+                <path class="body-part" data-zone="Piernas" d="M114 246 L142 241 L151 379 L138 390 L118 370 Z" tabindex="0" role="button" aria-label="Piernas" />
+              </svg></div>
+              <div class="zone-buttons"><button class="zone-button" data-zone="Cabeza">Cabeza</button><button class="zone-button" data-zone="Pecho">Pecho</button><button class="zone-button" data-zone="Abdomen">Abdomen</button><button class="zone-button" data-zone="Brazos">Brazos</button><button class="zone-button" data-zone="Piernas">Piernas</button></div>
+              <div class="legend" aria-label="Gravedad reportada"><span><i class="swatch" style="background:#70a9ff"></i>1 leve</span><span><i class="swatch" style="background:#62d9d0"></i>2</span><span><i class="swatch" style="background:#f3c568"></i>3 moderada</span><span><i class="swatch" style="background:#ff9a57"></i>4</span><span><i class="swatch" style="background:#ff7777"></i>5 intensa</span></div>
             </article>
-
             <article class="card">
-              <div class="eyebrow">Zona seleccionada</div>
-              <h2 id="selected-zone">Selecciona una zona</h2>
-              <p class="muted">El registro queda asociado a la hora actual. Si todavía no hay una muestra, podrás vincularla más adelante.</p>
-              <div class="field">
-                <label for="symptoms">Síntomas o cambios observados</label>
-                <textarea id="symptoms" placeholder="Describe brevemente lo que notas..." maxlength="4000"></textarea>
-                <button class="button" type="button" id="voice-input" style="margin-top:9px">🎙 Dictar síntoma</button>
-              </div>
-              <div class="field">
-                <label for="symptom-severity">Gravedad percibida (1–5)</label>
-                <select id="symptom-severity">
-                  <option value="">Sin indicar</option>
-                  <option value="1">1 — Leve</option>
-                  <option value="2">2</option>
-                  <option value="3">3 — Moderada</option>
-                  <option value="4">4</option>
-                  <option value="5">5 — Intensa</option>
-                </select>
-              </div>
-              <div class="form-actions">
-                <button class="button primary" id="save-symptom" type="button">Guardar síntoma</button>
-                <button class="button" type="button" data-go="sample">Ir a muestras</button>
-              </div>
+              <div class="eyebrow">Zona seleccionada</div><h2 id="selected-zone">Selecciona una zona</h2>
+              <p class="muted">El registro queda asociado a la hora actual y al tripulante indicado arriba.</p>
+              <div class="field"><label for="symptoms">Síntomas o cambios observados</label><textarea id="symptoms" placeholder="Describe brevemente lo que notas…" maxlength="4000"></textarea><button class="button" type="button" id="voice-input" style="margin-top:9px">🎙 Dictar síntoma</button></div>
+              <div class="field"><label for="symptom-severity">Gravedad percibida (1–5)</label><select id="symptom-severity"><option value="">Sin indicar</option><option value="1">1 — Leve</option><option value="2">2</option><option value="3">3 — Moderada</option><option value="4">4</option><option value="5">5 — Intensa</option></select></div>
+              <div class="form-actions"><button class="button primary" id="save-symptom" type="button">Guardar síntoma</button><button class="button" type="button" data-go="sample">Ir a muestras</button></div>
               <p id="symptom-confirmation" class="message" aria-live="polite"></p>
-              <div class="notice">El dictado depende del soporte del navegador. Revisa la transcripción antes de guardarla. El color visual refleja la gravedad reportada, no un diagnóstico.</div>
+              <div class="notice">Revisa la transcripción antes de guardarla. El color visual representa la gravedad reportada, no un diagnóstico.</div>
             </article>
           </div>
         </section>
 
         <section class="screen" id="sample">
-          <div class="page-heading">
-            <div>
-              <div class="eyebrow">Muestras de saliva</div>
-              <h1>Registrar muestra</h1>
-              <p class="muted">Guarda una muestra para asociar resultados y contexto.</p>
-            </div>
-            <span class="tag blue">Cortisol: indicador sistémico</span>
-          </div>
-
-          <article class="card">
-            <h2>Nueva muestra</h2>
-            <form id="sample-form">
-              <div class="grid grid-2">
-                <div class="field">
-                  <label for="sample-code">Código de muestra</label>
-                  <input id="sample-code" name="sample_code" placeholder="Ej. DEMO-001" required maxlength="100" />
-                </div>
-                <div class="field">
-                  <label for="subject-code">Código de tripulante</label>
-                  <input id="subject-code" name="subject_code" value="CREW-01" required maxlength="100" />
-                </div>
-              </div>
-              <div class="form-actions">
-                <button class="button primary" type="submit">Guardar muestra</button>
-              </div>
-            </form>
-            <p id="sample-message" class="message" aria-live="polite"></p>
+          <div class="page-heading"><div><div class="eyebrow">Muestras de saliva</div><h1>Registrar muestra</h1><p class="muted">Guarda una muestra para asociar resultados y contexto.</p></div><span class="tag blue">Cortisol: indicador sistémico</span></div>
+          <article class="card"><h2>Nueva muestra</h2><form id="sample-form"><div class="grid grid-2"><div class="field"><label for="sample-code">Código de muestra</label><input id="sample-code" placeholder="Ej. DEMO-001" required maxlength="100" /></div><div class="field"><label for="analyte">Analito</label><input id="analyte" value="cortisol" required maxlength="100" /></div></div><div class="form-actions"><button class="button primary" type="submit">Guardar muestra</button></div></form><p id="sample-message" class="message" aria-live="polite"></p></article>
+          <article class="card" style="margin-top:16px"><h2>Contexto asociado</h2><p class="muted">Selecciona eventos relevantes para la muestra activa.</p><div class="field"><label for="active-sample">Muestra activa</label><select id="active-sample"><option value="">Registra o carga una muestra…</option></select></div>
+            <div class="check-list" id="context-categories"><label><input type="checkbox" data-category="stress" />Estrés o evento emocional</label><label><input type="checkbox" data-category="physical_activity" />Actividad física o cambio de rutina</label><label><input type="checkbox" data-category="sleep" />Falta de sueño o alteración del descanso</label><label><input type="checkbox" data-category="illness" />Malestar o enfermedad</label><label><input type="checkbox" data-category="injury" />Golpe o lesión</label><label><input type="checkbox" data-category="collection_issue" />Dificultad durante la toma o problema de muestra</label><label><input type="checkbox" data-category="other" />Otro evento</label></div>
+            <div class="field"><label for="context-note">Detalles (opcional)</label><textarea id="context-note" placeholder="Añade detalles o una hora aproximada…" maxlength="4000"></textarea></div><button class="button primary" id="save-context" type="button" style="margin-top:14px">Guardar contexto</button><p id="context-confirmation" class="message" aria-live="polite"></p>
           </article>
-
-          <article class="card" style="margin-top:16px">
-            <h2>Contexto asociado</h2>
-            <p class="muted">Selecciona eventos que puedan ser relevantes para interpretar la muestra. Debe haber una muestra registrada en esta sesión.</p>
-            <div class="check-list" id="context-categories">
-              <label><input type="checkbox" data-category="stress" /> Estrés o evento emocional</label>
-              <label><input type="checkbox" data-category="physical_activity" /> Actividad física o cambio de rutina</label>
-              <label><input type="checkbox" data-category="sleep" /> Falta de sueño o alteración del descanso</label>
-              <label><input type="checkbox" data-category="illness" /> Malestar o enfermedad</label>
-              <label><input type="checkbox" data-category="injury" /> Golpe o lesión</label>
-              <label><input type="checkbox" data-category="collection_issue" /> Dificultad durante la toma o problema de muestra</label>
-              <label><input type="checkbox" data-category="other" /> Otro evento</label>
-            </div>
-            <div class="field">
-              <label for="context-note">Detalles (opcional)</label>
-              <textarea id="context-note" placeholder="Añade detalles o una hora aproximada..." maxlength="4000"></textarea>
-            </div>
-            <button class="button primary" id="save-context" type="button" style="margin-top:14px">Guardar contexto</button>
-            <p id="context-confirmation" class="message" aria-live="polite"></p>
-          </article>
-
-          <div class="notice">Los datos de medición deben interpretarse de acuerdo con el protocolo definido por el equipo médico. Esta interfaz no diagnostica.</div>
+          <div class="notice">Los resultados e interpretaciones dependen de la medición real y del protocolo aprobado por el equipo médico.</div>
         </section>
 
         <section class="screen" id="alerts">
-          <div class="page-heading">
-            <div>
-              <div class="eyebrow">Seguimiento a bordo</div>
-              <h1>Alertas e indicaciones</h1>
-              <p class="muted">Consulta las alertas almacenadas localmente por la API.</p>
-            </div>
-            <span class="tag amber">Envío externo no conectado</span>
-          </div>
-
-          <div id="alerts-list" class="grid" aria-live="polite">
-            <article class="card"><p class="muted">Cargando alertas…</p></article>
-          </div>
-
-          <article class="card" style="margin-top:16px">
-            <h2>Registrar indicación aprobada</h2>
-            <p class="muted">Esta versión guarda la indicación que ingresa el operador; no calcula recomendaciones automáticamente.</p>
-            <form id="recommendation-form">
-              <div class="grid grid-2">
-                <div class="field">
-                  <label for="recommendation-type">Tipo de indicación</label>
-                  <select id="recommendation-type" required>
-                    <option value="collect_sample">Realizar análisis</option>
-                    <option value="repeat_sample">Repetir análisis</option>
-                    <option value="review_protocol">Revisar protocolo</option>
-                    <option value="onboard_medical_care">Atención médica a bordo</option>
-                  </select>
-                </div>
-                <div class="field">
-                  <label for="ruleset-version">Versión del protocolo</label>
-                  <input id="ruleset-version" value="demo-1" required maxlength="100" />
-                </div>
-              </div>
-              <div class="field">
-                <label for="recommendation-instructions">Instrucciones aprobadas</label>
-                <textarea id="recommendation-instructions" placeholder="Escribe una indicación autorizada para esta demostración..." required maxlength="4000"></textarea>
-              </div>
-              <button class="button primary" type="submit" style="margin-top:14px">Guardar indicación</button>
-            </form>
-            <p id="recommendation-message" class="message" aria-live="polite"></p>
-          </article>
-
-          <div class="notice">El estado de envío refleja el registro en la API; el envío real de alertas a Tierra y la recepción de respuesta no están implementados en este prototipo.</div>
+          <div class="page-heading"><div><div class="eyebrow">Seguimiento a bordo</div><h1>Alertas e indicaciones</h1><p class="muted">Consulta las alertas almacenadas localmente por la API.</p></div><span class="tag amber">Envío externo no conectado</span></div>
+          <div id="alerts-list" class="grid" aria-live="polite"><article class="card"><p class="muted">Cargando alertas…</p></article></div>
+          <article class="card" style="margin-top:16px"><h2>Registrar indicación aprobada</h2><p class="muted">La indicación la ingresa un operador; no se calcula automáticamente.</p><form id="recommendation-form"><div class="grid grid-2"><div class="field"><label for="recommendation-type">Tipo</label><select id="recommendation-type" required><option value="collect_sample">Realizar análisis</option><option value="repeat_sample">Repetir análisis</option><option value="review_protocol">Revisar protocolo</option><option value="onboard_medical_care">Atención médica a bordo</option></select></div><div class="field"><label for="ruleset-version">Versión del protocolo</label><input id="ruleset-version" value="demo-1" required maxlength="100" /></div></div><div class="field"><label for="recommendation-instructions">Instrucciones aprobadas</label><textarea id="recommendation-instructions" placeholder="Escribe una indicación autorizada para esta demostración…" required maxlength="4000"></textarea></div><button class="button primary" type="submit" style="margin-top:14px">Guardar indicación</button></form><p id="recommendation-message" class="message" aria-live="polite"></p></article>
+          <div class="notice">El estado de envío refleja el registro en la API; el envío real de alertas a Tierra no está implementado.</div>
         </section>
-
         <div class="footer-note">Prototipo de demostración · usar datos ficticios · no usar para decisiones clínicas</div>
       </div>
     </main>
   </div>
-  <script src="app.js"></script>
+  <script src="app.js" defer></script>
 </body>
 </html>

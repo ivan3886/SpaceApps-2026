@@ -1,6 +1,7 @@
 from fastapi import Depends, FastAPI, HTTPException, Query, status
-from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import select
+from sqlalchemy.orm import Session
 
 from app import crud
 from app.db import get_db
@@ -31,10 +32,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5500",
-        "http://127.0.0.1:5500",
-    ],
+    allow_origins=["http://localhost:5500", "http://127.0.0.1:5500"],
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -53,17 +51,12 @@ def health_check():
     return {"status": "ok"}
 
 
-@app.post(
-    "/samples",
-    response_model=SampleRead,
-    status_code=status.HTTP_201_CREATED,
-)
+@app.post("/samples", response_model=SampleRead, status_code=status.HTTP_201_CREATED)
 def create_sample(payload: SampleCreate, db: Session = Depends(get_db)):
     sample = Sample(**payload.model_dump())
     try:
         return crud.create(db, sample)
     except Exception as exc:
-        # En producción, registrar el error internamente sin exponer detalles.
         raise HTTPException(status_code=409, detail="No se pudo crear la muestra") from exc
 
 
@@ -74,9 +67,7 @@ def list_samples(
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
 ):
-    return crud.list_records(
-        db, Sample, subject_code=subject_code, limit=limit, offset=offset
-    )
+    return crud.list_records(db, Sample, subject_code=subject_code, limit=limit, offset=offset)
 
 
 @app.get("/samples/{sample_id}", response_model=SampleRead)
@@ -85,25 +76,13 @@ def get_sample(sample_id: int, db: Session = Depends(get_db)):
 
 
 @app.patch("/samples/{sample_id}", response_model=SampleRead)
-def update_sample(
-    sample_id: int,
-    payload: SampleUpdate,
-    db: Session = Depends(get_db),
-):
+def update_sample(sample_id: int, payload: SampleUpdate, db: Session = Depends(get_db)):
     sample = get_or_404(db, Sample, sample_id)
-    changes = payload.model_dump(exclude_unset=True)
-    return crud.update_fields(db, sample, changes)
+    return crud.update_fields(db, sample, payload.model_dump(exclude_unset=True))
 
 
-@app.post(
-    "/context-notes",
-    response_model=ContextNoteRead,
-    status_code=status.HTTP_201_CREATED,
-)
-def create_context_note(
-    payload: ContextNoteCreate,
-    db: Session = Depends(get_db),
-):
+@app.post("/context-notes", response_model=ContextNoteRead, status_code=status.HTTP_201_CREATED)
+def create_context_note(payload: ContextNoteCreate, db: Session = Depends(get_db)):
     get_or_404(db, Sample, payload.sample_id)
     return crud.create(db, ContextNote(**payload.model_dump()))
 
@@ -111,14 +90,15 @@ def create_context_note(
 @app.get("/samples/{sample_id}/context-notes", response_model=list[ContextNoteRead])
 def list_context_notes(sample_id: int, db: Session = Depends(get_db)):
     get_or_404(db, Sample, sample_id)
-    return crud.list_records(db, ContextNote, limit=500, offset=0)
+    statement = (
+        select(ContextNote)
+        .where(ContextNote.sample_id == sample_id)
+        .order_by(ContextNote.entered_at.desc())
+    )
+    return list(db.scalars(statement).all())
 
 
-@app.post(
-    "/symptoms",
-    response_model=SymptomRead,
-    status_code=status.HTTP_201_CREATED,
-)
+@app.post("/symptoms", response_model=SymptomRead, status_code=status.HTTP_201_CREATED)
 def create_symptom(payload: SymptomCreate, db: Session = Depends(get_db)):
     data = payload.model_dump()
     if data["sample_id"] is not None:
@@ -133,20 +113,11 @@ def list_symptoms(
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
 ):
-    return crud.list_records(
-        db, SymptomReport, subject_code=subject_code, limit=limit, offset=offset
-    )
+    return crud.list_records(db, SymptomReport, subject_code=subject_code, limit=limit, offset=offset)
 
 
-@app.post(
-    "/recommendations",
-    response_model=RecommendationRead,
-    status_code=status.HTTP_201_CREATED,
-)
-def create_recommendation(
-    payload: RecommendationCreate,
-    db: Session = Depends(get_db),
-):
+@app.post("/recommendations", response_model=RecommendationRead, status_code=status.HTTP_201_CREATED)
+def create_recommendation(payload: RecommendationCreate, db: Session = Depends(get_db)):
     data = payload.model_dump()
     if data["sample_id"] is not None:
         get_or_404(db, Sample, data["sample_id"])
@@ -162,15 +133,10 @@ def list_recommendations(
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
 ):
-    return crud.list_records(
-        db, Recommendation, subject_code=subject_code, limit=limit, offset=offset
-    )
+    return crud.list_records(db, Recommendation, subject_code=subject_code, limit=limit, offset=offset)
 
 
-@app.patch(
-    "/recommendations/{recommendation_id}",
-    response_model=RecommendationRead,
-)
+@app.patch("/recommendations/{recommendation_id}", response_model=RecommendationRead)
 def update_recommendation(
     recommendation_id: int,
     payload: RecommendationUpdate,
@@ -183,11 +149,7 @@ def update_recommendation(
     return crud.update_fields(db, record, changes)
 
 
-@app.post(
-    "/alerts",
-    response_model=AlertRead,
-    status_code=status.HTTP_201_CREATED,
-)
+@app.post("/alerts", response_model=AlertRead, status_code=status.HTTP_201_CREATED)
 def create_alert(payload: AlertCreate, db: Session = Depends(get_db)):
     data = payload.model_dump()
     for field, model in (
@@ -199,13 +161,9 @@ def create_alert(payload: AlertCreate, db: Session = Depends(get_db)):
             get_or_404(db, model, data[field])
 
     alert = crud.create(db, Alert(**data))
-
-    # Esto solo marca el estado para el sistema de comunicaciones.
-    # No implementa el envío real de alertas a Tierra.
+    # Marca como pendiente para un futuro servicio; no realiza un envío externo.
     if alert.level == AlertLevel.EMERGENCY:
-        alert.delivery_status = AlertDeliveryStatus.PENDING
-        alert = crud.update_fields(db, alert, {"delivery_status": alert.delivery_status})
-
+        alert = crud.update_fields(db, alert, {"delivery_status": AlertDeliveryStatus.PENDING})
     return alert
 
 
@@ -216,17 +174,11 @@ def list_alerts(
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
 ):
-    return crud.list_records(
-        db, Alert, subject_code=subject_code, limit=limit, offset=offset
-    )
+    return crud.list_records(db, Alert, subject_code=subject_code, limit=limit, offset=offset)
 
 
 @app.patch("/alerts/{alert_id}", response_model=AlertRead)
-def update_alert(
-    alert_id: int,
-    payload: AlertUpdate,
-    db: Session = Depends(get_db),
-):
+def update_alert(alert_id: int, payload: AlertUpdate, db: Session = Depends(get_db)):
     alert = get_or_404(db, Alert, alert_id)
     return crud.update_fields(db, alert, payload.model_dump(exclude_unset=True))
 
